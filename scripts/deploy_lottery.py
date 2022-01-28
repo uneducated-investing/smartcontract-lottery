@@ -5,7 +5,7 @@ import time
 
 def deploy_lottery():
     account = get_account()
-    Lottery.deploy(
+    lottery = Lottery.deploy(
         get_contract("eth_usd_price_feed").address,
         get_contract("vrf_coordinator").address,
         get_contract("link_token").address,
@@ -15,6 +15,7 @@ def deploy_lottery():
         publish_source=config["networks"][network.show_active()].get("verify", False),
     )
     print("Deployed lottery!")
+    return lottery
 
 
 def start_lottery():
@@ -43,7 +44,10 @@ def end_lottery():
     tx.wait(1)
     ending_transaction = lottery.endLottery({"from": account})
     ending_transaction.wait(1)
-    time.sleep(60)
+    i = 0
+    while lottery.randomness() == 0 and i < 360:
+        time.sleep(10)
+        i += 1
     print(f"{lottery.recentWinner()} is the new winner!")
 
 

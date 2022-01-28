@@ -56,7 +56,7 @@ def get_contract(contract_name):
             deploy_mocks()
         contract = contract_type[-1]
     else:
-        contract_address = config["networks"][netowrk.show_active()][contract_name]
+        contract_address = config["networks"][network.show_active()][contract_name]
         # address
         # ABI
         contract = Contract.from_abi(
